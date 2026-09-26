@@ -1,21 +1,41 @@
-# STC89C52RC Modular 8051 Demo
+# Learning the 8051 Microcontroller From Scratch
 
-A small Keil C51 learning project that demonstrates modular C programming for
-the STC89C52RC and compatible 8051 microcontrollers.
+A personal learning repository for the STC89C52RC and compatible 8051
+microcontrollers. Each experiment is kept in its own project directory with
+source code, a Keil project, and focused documentation.
 
-## Modules
+## Projects
 
-- `main.c`: Entry point with a periodic output toggle on `P2.0`.
-- `Delayms.c` / `Delayms.h`: Millisecond delay routine calibrated for 12 MHz.
-- `Nixie.c` / `Nixie.h`: Seven-segment display driver with a digit lookup table
-  and position selection through `P2.2`-`P2.4`.
+### 01 - Modular Seven-Segment Demo
 
-## Build
+Demonstrates modular C programming with separate delay and seven-segment
+display drivers. The program includes an output toggle on `P2.0`, while the
+display module provides a digit lookup table and position selection through
+`P2.2`-`P2.4`.
 
-1. Open `stc89c52rc_modular_demo.uvproj` in Keil uVision.
-2. Build the project with the C51 toolchain.
-3. Program the generated HEX file to the development board.
+Project directory: `projects/01-modular-seven-segment-demo/`
 
-The Keil target uses the AT89C52 device profile, which is compatible with the
-8051 instruction set used by the STC89C52RC. The delay routine assumes a
-12 MHz clock.
+## Repository Layout
+
+```text
+.
+|-- .gitignore
+|-- README.md
+`-- projects
+    `-- 01-modular-seven-segment-demo
+        |-- Delayms.c
+        |-- Delayms.h
+        |-- Nixie.c
+        |-- Nixie.h
+        |-- main.c
+        |-- README.md
+        `-- stc89c52rc_modular_demo.uvproj
+```
+
+## Toolchain
+
+- Keil uVision with the C51 toolchain
+- STC89C52RC development board
+
+The included Keil target uses the AT89C52 device profile, which is compatible
+with the 8051 instruction set used by the STC89C52RC.
