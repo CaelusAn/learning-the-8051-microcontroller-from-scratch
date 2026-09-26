@@ -1,0 +1,16 @@
+# Keil build outputs
+Objects/
+Listings/
+*.hex
+*.obj
+*.lst
+*.m51
+*.lnp
+*.build_log.htm
+
+# Keil user-specific settings
+*.uvgui.*
+*.uvopt
+*.uvoptx
+*.bak
+*.tmp
