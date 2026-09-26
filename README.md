@@ -15,6 +15,13 @@ display module provides a digit lookup table and position selection through
 
 Project directory: `projects/01-modular-seven-segment-demo/`
 
+### 02 - LCD1602 String Display
+
+Initializes an LCD1602 display and prints two demo strings. The project also
+contains reusable delay helpers and an LCD command/data driver.
+
+Project directory: `projects/02-led-test-print-string/`
+
 ## Repository Layout
 
 ```text
@@ -22,14 +29,22 @@ Project directory: `projects/01-modular-seven-segment-demo/`
 |-- .gitignore
 |-- README.md
 `-- projects
-    `-- 01-modular-seven-segment-demo
-        |-- Delayms.c
-        |-- Delayms.h
-        |-- Nixie.c
-        |-- Nixie.h
-        |-- main.c
+    |-- 01-modular-seven-segment-demo
+    |   |-- Delayms.c
+    |   |-- Delayms.h
+    |   |-- Nixie.c
+    |   |-- Nixie.h
+    |   |-- main.c
+    |   |-- README.md
+    |   `-- stc89c52rc_modular_demo.uvproj
+    `-- 02-led-test-print-string
         |-- README.md
-        `-- stc89c52rc_modular_demo.uvproj
+        |-- lcd1602.c
+        |-- lcd1602.h
+        |-- main.c
+        |-- proj.uvproj
+        |-- public.c
+        `-- public.h
 ```
 
 ## Toolchain
