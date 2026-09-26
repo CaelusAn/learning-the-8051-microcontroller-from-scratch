@@ -14,3 +14,6 @@ Listings/
 *.uvoptx
 *.bak
 *.tmp
+
+# Legacy project name recreated by Keil while the old project is open
+proj26926.*
