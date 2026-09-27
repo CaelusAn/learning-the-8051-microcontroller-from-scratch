@@ -1,12 +1,19 @@
-#include "lcd1602.h"   //  public.h -> reg52.h
+/*
+ * File:   main.c
+ * Brief:  Display two demo strings on an LCD1602.
+ * Author: CaelusAn
+ * Date:   2026-09-27
+ */
 
-void main()
+#include "lcd1602.h"
+
+void main(void)
 {
-    lcd1602_init();
-    lcd1602_show_string(0, 0, "114514");
-    lcd1602_show_string(0, 1, "1919810");
-    while(1)
+    LCD1602_Init();
+    LCD1602_ShowString(LCD1602_COLUMN_START, LCD1602_ROW_1, "114514");
+    LCD1602_ShowString(LCD1602_COLUMN_START, LCD1602_ROW_2, "1919810");
+
+    while (1)
     {
-			
     }
 }

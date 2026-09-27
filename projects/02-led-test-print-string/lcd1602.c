@@ -1,162 +1,173 @@
+/*
+ * File:   lcd1602.c
+ * Brief:  LCD1602 command, data, and string display driver.
+ * Author: CaelusAn
+ * Date:   2026-09-27
+ */
+
 #include "lcd1602.h"
 
+#define LCD1602_COMMAND_CLEAR_DISPLAY 0x01U
+#define LCD1602_COMMAND_ENTRY_MODE    0x06U
+#define LCD1602_COMMAND_DISPLAY_ON    0x0CU
+#define LCD1602_COMMAND_SET_DDRAM     0x80U
+#define LCD1602_SECOND_ROW_OFFSET     0x40U
+#define LCD1602_ENABLE_DELAY_MS       1U
 
-/*******************************************************************************
-* 函 数 名       : lcd1602_write_cmd
-* 函数功能		 : LCD1602写命令
-* 输    入       : cmd：指令
-* 输    出    	 : 无
-*******************************************************************************/
-#if (LCD1602_4OR8_DATA_INTERFACE==0)//8位LCD
-void lcd1602_write_cmd(u8 cmd)
-{
-	LCD1602_RS=0;//选择命令
-	LCD1602_RW=0;//选择写
-	LCD1602_E=0;
-	LCD1602_DATAPORT=cmd;//准备命令
-	delay_ms(1);
-	LCD1602_E=1;//使能脚E先上升沿写入
-	delay_ms(1);
-	LCD1602_E=0;//使能脚E后负跳变完成写入	
-}
-#else	//4位LCD
-void lcd1602_write_cmd(u8 cmd)
-{
-	LCD1602_RS=0;//选择命令
-	LCD1602_RW=0;//选择写
-	LCD1602_E=0;
-	LCD1602_DATAPORT=cmd;//准备命令
-	delay_ms(1);
-	LCD1602_E=1;//使能脚E先上升沿写入
-	delay_ms(1);
-	LCD1602_E=0;//使能脚E后负跳变完成写入
-	
-	LCD1602_DATAPORT=cmd<<4;//准备命令
-	delay_ms(1);
-	LCD1602_E=1;//使能脚E先上升沿写入
-	delay_ms(1);
-	LCD1602_E=0;//使能脚E后负跳变完成写入	
-}
-#endif
-
-/*******************************************************************************
-* 函 数 名       : lcd1602_write_data
-* 函数功能		 : LCD1602写数据
-* 输    入       : dat：数据
-* 输    出    	 : 无
-*******************************************************************************/
-#if (LCD1602_4OR8_DATA_INTERFACE==0)//8位LCD
-void lcd1602_write_data(u8 dat) 
-{
-	LCD1602_RS=1;//选择数据
-	LCD1602_RW=0;//选择写
-	LCD1602_E=0;
-	LCD1602_DATAPORT=dat;//准备数据
-	delay_ms(1);
-	LCD1602_E=1;//使能脚E先上升沿写入
-	delay_ms(1);
-	LCD1602_E=0;//使能脚E后负跳变完成写入		
-}
+#if (LCD1602_4OR8_DATA_INTERFACE == 0U)
+#define LCD1602_FUNCTION_SET 0x38U
 #else
-void lcd1602_write_data(u8 dat) 
-{
-	LCD1602_RS=1;//选择数据
-	LCD1602_RW=0;//选择写
-	LCD1602_E=0;
-	LCD1602_DATAPORT=dat;//准备数据
-	delay_ms(1);
-	LCD1602_E=1;//使能脚E先上升沿写入
-	delay_ms(1);
-	LCD1602_E=0;//使能脚E后负跳变完成写入
-	
-	LCD1602_DATAPORT=dat<<4;//准备数据
-	delay_ms(1);
-	LCD1602_E=1;//使能脚E先上升沿写入
-	delay_ms(1);
-	LCD1602_E=0;//使能脚E后负跳变完成写入		
-}
+#define LCD1602_FUNCTION_SET 0x28U
 #endif
 
-/*******************************************************************************
-* 函 数 名       : lcd1602_init
-* 函数功能		 : LCD1602初始化
-* 输    入       : 无
-* 输    出    	 : 无
-*******************************************************************************/
-#if (LCD1602_4OR8_DATA_INTERFACE==0)//8位LCD
-void lcd1602_init(void)
+/*
+ * @brief  Write a command byte to the LCD1602.
+ * @param  command LCD command byte.
+ * @retval None
+ */
+static void LCD1602_WriteCommand(u8 command)
 {
-	lcd1602_write_cmd(0x38);//数据总线8位，显示2行，5*7点阵/字符
-	lcd1602_write_cmd(0x0c);//显示功能开，无光标，光标闪烁
-	lcd1602_write_cmd(0x06);//写入新数据后光标右移，显示屏不移动
-	lcd1602_write_cmd(0x01);//清屏	
-}
+    LCD1602_RS = 0;
+    LCD1602_RW = 0;
+    LCD1602_E = 0;
+
+#if (LCD1602_4OR8_DATA_INTERFACE == 0U)
+    LCD1602_DATA_PORT = command;
+    DelayMs(LCD1602_ENABLE_DELAY_MS);
+    LCD1602_E = 1;
+    DelayMs(LCD1602_ENABLE_DELAY_MS);
+    LCD1602_E = 0;
 #else
-void lcd1602_init(void)
-{
-	lcd1602_write_cmd(0x28);//数据总线4位，显示2行，5*7点阵/字符
-	lcd1602_write_cmd(0x0c);//显示功能开，无光标，光标闪烁
-	lcd1602_write_cmd(0x06);//写入新数据后光标右移，显示屏不移动
-	lcd1602_write_cmd(0x01);//清屏	
-}
+    LCD1602_DATA_PORT = command & 0xF0U;
+    DelayMs(LCD1602_ENABLE_DELAY_MS);
+    LCD1602_E = 1;
+    DelayMs(LCD1602_ENABLE_DELAY_MS);
+    LCD1602_E = 0;
+
+    LCD1602_DATA_PORT = (u8)(command << 4U);
+    DelayMs(LCD1602_ENABLE_DELAY_MS);
+    LCD1602_E = 1;
+    DelayMs(LCD1602_ENABLE_DELAY_MS);
+    LCD1602_E = 0;
 #endif
-
-/*******************************************************************************
-* 函 数 名       : lcd1602_clear
-* 函数功能		 : LCD1602清屏
-* 输    入       : 无
-* 输    出    	 : 无
-*******************************************************************************/
-void lcd1602_clear(void)
-{
-	lcd1602_write_cmd(0x01);	
 }
 
-/*******************************************************************************
-* 函 数 名       : lcd1602_show_string
-* 函数功能		 : LCD1602显示字符
-* 输    入       : x,y：显示坐标，x=0~15，y=0~1;
-				   str：显示字符串
-* 输    出    	 : 无
-*******************************************************************************/
-void lcd1602_show_string(u8 x,u8 y,u8 *str)
+/*
+ * @brief  Write a data byte to the LCD1602.
+ * @param  value Character value to display.
+ * @retval None
+ */
+static void LCD1602_WriteData(u8 value)
 {
-	u8 i=0;
+    LCD1602_RS = 1;
+    LCD1602_RW = 0;
+    LCD1602_E = 0;
 
-	if(y>1||x>15)return;//行列参数不对则强制退出
+#if (LCD1602_4OR8_DATA_INTERFACE == 0U)
+    LCD1602_DATA_PORT = value;
+    DelayMs(LCD1602_ENABLE_DELAY_MS);
+    LCD1602_E = 1;
+    DelayMs(LCD1602_ENABLE_DELAY_MS);
+    LCD1602_E = 0;
+#else
+    LCD1602_DATA_PORT = value & 0xF0U;
+    DelayMs(LCD1602_ENABLE_DELAY_MS);
+    LCD1602_E = 1;
+    DelayMs(LCD1602_ENABLE_DELAY_MS);
+    LCD1602_E = 0;
 
-	if(y<1)	//第1行显示
-	{	
-		while(*str!='\0')//字符串是以'\0'结尾，只要前面有内容就显示
-		{
-			if(i<16-x)//如果字符长度超过第一行显示范围，则在第二行继续显示
-			{
-				lcd1602_write_cmd(0x80+i+x);//第一行显示地址设置	
-			}
-			else
-			{
-				lcd1602_write_cmd(0x40+0x80+i+x-16);//第二行显示地址设置	
-			}
-			lcd1602_write_data(*str);//显示内容
-			str++;//指针递增
-			i++;	
-		}	
-	}
-	else	//第2行显示
-	{
-		while(*str!='\0')
-		{
-			if(i<16-x) //如果字符长度超过第二行显示范围，则在第一行继续显示
-			{
-				lcd1602_write_cmd(0x80+0x40+i+x);	
-			}
-			else
-			{
-				lcd1602_write_cmd(0x80+i+x-16);	
-			}
-			lcd1602_write_data(*str);
-			str++;
-			i++;	
-		}	
-	}				
+    LCD1602_DATA_PORT = (u8)(value << 4U);
+    DelayMs(LCD1602_ENABLE_DELAY_MS);
+    LCD1602_E = 1;
+    DelayMs(LCD1602_ENABLE_DELAY_MS);
+    LCD1602_E = 0;
+#endif
+}
+
+/*
+ * @brief  Initialize the LCD1602 for two-line text display.
+ * @param  None
+ * @retval None
+ */
+void LCD1602_Init(void)
+{
+    LCD1602_WriteCommand(LCD1602_FUNCTION_SET);
+    LCD1602_WriteCommand(LCD1602_COMMAND_DISPLAY_ON);
+    LCD1602_WriteCommand(LCD1602_COMMAND_ENTRY_MODE);
+    LCD1602_WriteCommand(LCD1602_COMMAND_CLEAR_DISPLAY);
+}
+
+/*
+ * @brief  Clear the LCD1602 display.
+ * @param  None
+ * @retval None
+ */
+void LCD1602_Clear(void)
+{
+    LCD1602_WriteCommand(LCD1602_COMMAND_CLEAR_DISPLAY);
+}
+
+/*
+ * @brief  Calculate the LCD DDRAM address for the next character.
+ * @param  column    Starting column from 0 to 15.
+ * @param  row       Starting row: 0 for the first row, 1 for the second row.
+ * @param  textIndex Zero-based character index in the string.
+ * @retval LCD command byte containing the target DDRAM address.
+ */
+static u8 LCD1602_GetAddress(u8 column, u8 row, u8 textIndex)
+{
+    if (row == LCD1602_ROW_1)
+    {
+        if (textIndex < (LCD1602_COLUMN_COUNT - column))
+        {
+            return (u8)(LCD1602_COMMAND_SET_DDRAM + column + textIndex);
+        }
+
+        return (u8)(LCD1602_COMMAND_SET_DDRAM +
+                    LCD1602_SECOND_ROW_OFFSET +
+                    column +
+                    textIndex -
+                    LCD1602_COLUMN_COUNT);
+    }
+
+    if (textIndex < (LCD1602_COLUMN_COUNT - column))
+    {
+        return (u8)(LCD1602_COMMAND_SET_DDRAM +
+                    LCD1602_SECOND_ROW_OFFSET +
+                    column +
+                    textIndex);
+    }
+
+    return (u8)(LCD1602_COMMAND_SET_DDRAM + column + textIndex -
+                LCD1602_COLUMN_COUNT);
+}
+
+/*
+ * @brief  Write a null-terminated string at the selected LCD position.
+ * @param  column Starting column from 0 to 15.
+ * @param  row    Starting row: 0 for the first row, 1 for the second row.
+ * @param  text   Pointer to the null-terminated string.
+ * @retval None
+ * @note   Text wraps automatically between the two LCD rows.
+ */
+void LCD1602_ShowString(u8 column, u8 row, const char *text)
+{
+    u8 textIndex = 0U;
+
+    if ((row >= LCD1602_ROW_COUNT) || (column >= LCD1602_COLUMN_COUNT))
+    {
+        return;
+    }
+
+    if (text == 0)
+    {
+        return;
+    }
+
+    while (text[textIndex] != '\0')
+    {
+        LCD1602_WriteCommand(LCD1602_GetAddress(column, row, textIndex));
+        LCD1602_WriteData((u8)text[textIndex]);
+        textIndex++;
+    }
 }

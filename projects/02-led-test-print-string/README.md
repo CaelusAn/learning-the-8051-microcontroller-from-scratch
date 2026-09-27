@@ -35,7 +35,7 @@ The driver defaults to an 8-bit LCD data interface. Set
 
 1. Open `proj.uvproj` in Keil uVision.
 2. Build the project with the C51 toolchain.
-3. Program the generated HEX file to the STC89C52RC board.
+3. Program `Objects/lcd1602_string_display.hex` to the STC89C52RC board.
 
 The delay routines depend on the selected oscillator frequency. Adjust the
 delay values if your board does not use a compatible clock frequency.

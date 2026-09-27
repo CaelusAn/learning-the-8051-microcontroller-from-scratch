@@ -1,25 +1,43 @@
+/*
+ * File:   public.c
+ * Brief:  Common delay routines for 8051 projects.
+ * Author: CaelusAn
+ * Date:   2026-09-27
+ */
+
 #include "public.h"
 
-/*******************************************************************************
-* 函 数 名       : delay_10us
-* 函数功能		 : 延时函数，ten_us=1时，大约延时10us
-* 输    入       : ten_us
-* 输    出    	 : 无
-*******************************************************************************/
-void delay_10us(u16 ten_us)
+#define DELAY_MS_INNER_LOOPS 110U
+
+/*
+ * @brief  Delay for approximately the requested number of 10 us units.
+ * @param  delayUnits Number of 10 us units to delay.
+ * @retval None
+ */
+void Delay10us(u16 delayUnits)
 {
-	while(ten_us--);	
+    while (delayUnits > 0U)
+    {
+        delayUnits--;
+    }
 }
 
-/*******************************************************************************
-* 函 数 名       : delay_ms
-* 函数功能		 : ms延时函数，ms=1时，大约延时1ms
-* 输    入       : ms：ms延时时间
-* 输    出    	 : 无
-*******************************************************************************/
-void delay_ms(u16 ms)
+/*
+ * @brief  Delay for approximately the requested number of milliseconds.
+ * @param  milliseconds Number of milliseconds to delay.
+ * @retval None
+ * @note   The timing is calibrated for a 12 MHz clock and may vary with the
+ *         compiler and optimization settings.
+ */
+void DelayMs(u16 milliseconds)
 {
-	u16 i,j;
-	for(i=ms;i>0;i--)
-		for(j=110;j>0;j--);
+    u16 outerIndex;
+    u16 innerIndex;
+
+    for (outerIndex = milliseconds; outerIndex > 0U; outerIndex--)
+    {
+        for (innerIndex = DELAY_MS_INNER_LOOPS; innerIndex > 0U; innerIndex--)
+        {
+        }
+    }
 }
