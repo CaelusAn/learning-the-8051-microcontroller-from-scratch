@@ -22,6 +22,13 @@ contains reusable delay helpers and an LCD command/data driver.
 
 Project directory: `projects/02-led-test-print-string/`
 
+### 03 - Matrix Keypad LCD Display
+
+Scans a 4x4 matrix keypad through `P1` and displays the pressed key number
+from `01` to `16` on an LCD1602.
+
+Project directory: `projects/03-matrix-keypad-lcd-display/`
+
 ## Repository Layout
 
 ```text
@@ -37,12 +44,24 @@ Project directory: `projects/02-led-test-print-string/`
     |   |-- main.c
     |   |-- README.md
     |   `-- stc89c52rc_modular_demo.uvproj
-    `-- 02-led-test-print-string
+    |-- 02-led-test-print-string
+    |   |-- README.md
+    |   |-- lcd1602.c
+    |   |-- lcd1602.h
+    |   |-- main.c
+    |   |-- proj.uvproj
+    |   |-- public.c
+    |   `-- public.h
+    `-- 03-matrix-keypad-lcd-display
         |-- README.md
+        |-- Delayms.c
+        |-- Delayms.h
         |-- lcd1602.c
         |-- lcd1602.h
         |-- main.c
-        |-- proj.uvproj
+        |-- matrix_key.c
+        |-- matrix_key.h
+        |-- matrix_keypad_lcd.uvproj
         |-- public.c
         `-- public.h
 ```
