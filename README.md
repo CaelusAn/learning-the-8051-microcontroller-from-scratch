@@ -28,7 +28,7 @@ Project directory: `projects/01-modular-seven-segment-demo/`
 Initializes an LCD1602 display and prints two demo strings. The project also
 contains reusable delay helpers and an LCD command/data driver.
 
-Project directory: `projects/02-led-test-print-string/`
+Project directory: `projects/02-lcd-test-print-string/`
 
 ### 03 - Matrix Keypad LCD Display
 
@@ -55,7 +55,7 @@ Project directory: `projects/03-matrix-keypad-lcd-display/`
     |   |-- seven_segment.c
     |   |-- seven_segment.h
     |   `-- stc89c52rc_modular_demo.uvproj
-    |-- 02-led-test-print-string
+    |-- 02-lcd-test-print-string
     |   |-- README.md
     |   |-- lcd1602.c
     |   |-- lcd1602.h
