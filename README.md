@@ -4,6 +4,14 @@ A personal learning repository for the STC89C52RC and compatible 8051
 microcontrollers. Each experiment is kept in its own project directory with
 source code, a Keil project, and focused documentation.
 
+> **AI Assistance and Source Acknowledgement**
+>
+> Codex participated in code formatting optimization and partial refactoring.
+> All original code was hand-typed by me. AI optimization was intentionally
+> used at publication time to improve readability. Approximately 30% of the
+> code is based on or supported by existing external resources. I sincerely
+> thank the providers of those code resources.
+
 ## Projects
 
 ### 01 - Modular Seven-Segment Demo
