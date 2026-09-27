@@ -1,0 +1,7 @@
+* text=auto
+.editorconfig text eol=lf
+.gitattributes text eol=lf
+*.c text eol=lf
+*.h text eol=lf
+*.md text eol=lf
+*.uvproj text eol=lf

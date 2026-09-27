@@ -33,16 +33,19 @@ Project directory: `projects/03-matrix-keypad-lcd-display/`
 
 ```text
 .
+|-- .editorconfig
+|-- .gitattributes
 |-- .gitignore
+|-- CODE_STYLE.md
 |-- README.md
 `-- projects
     |-- 01-modular-seven-segment-demo
-    |   |-- Delayms.c
-    |   |-- Delayms.h
-    |   |-- Nixie.c
-    |   |-- Nixie.h
     |   |-- main.c
+    |   |-- public.c
+    |   |-- public.h
     |   |-- README.md
+    |   |-- seven_segment.c
+    |   |-- seven_segment.h
     |   `-- stc89c52rc_modular_demo.uvproj
     |-- 02-led-test-print-string
     |   |-- README.md
@@ -54,8 +57,6 @@ Project directory: `projects/03-matrix-keypad-lcd-display/`
     |   `-- public.h
     `-- 03-matrix-keypad-lcd-display
         |-- README.md
-        |-- Delayms.c
-        |-- Delayms.h
         |-- lcd1602.c
         |-- lcd1602.h
         |-- main.c
@@ -65,6 +66,12 @@ Project directory: `projects/03-matrix-keypad-lcd-display/`
         |-- public.c
         `-- public.h
 ```
+
+## Coding Style
+
+All source code follows the conventions in [CODE_STYLE.md](CODE_STYLE.md).
+The `.editorconfig` file sets the base whitespace and indentation rules for
+supported editors.
 
 ## Toolchain
 
