@@ -92,8 +92,8 @@ The driver defaults to the 8-bit LCD data interface.
 - `main.c`: Application entry point and main keypad display loop.
 - `matrix_key.c` / `matrix_key.h`: 4x4 keypad scanning and debounce logic.
 - `lcd1602.c` / `lcd1602.h`: LCD1602 command, data, and string functions.
-- `Delayms.c` / `Delayms.h`: Millisecond delay routine for keypad timing.
-- `public.c` / `public.h`: Common type aliases and general delay functions.
+- `public.c` / `public.h`: Common types and delay routines used by the keypad
+  and LCD modules.
 
 ## Build
 

@@ -1,35 +1,45 @@
-#include <REGX52.H>
-#include "Delayms.h"
+/*
+ * File:   main.c
+ * Brief:  Display the pressed matrix keypad number on an LCD1602.
+ * Author: CaelusAn
+ * Date:   2026-09-27
+ */
+
+#include "public.h"
 #include "lcd1602.h"
 #include "matrix_key.h"
 
+#define KEY_TEXT_LENGTH 3U
+
 /*
- * Convert a number (0~99) to a two-digit string with leading zero.
- * Example: 1 -> "01", 12 -> "12"
+ * @brief  Convert a number from 0 to 99 to a two-digit string.
+ * @param  number Number to convert.
+ * @param  text   Output buffer with room for two digits and a terminator.
+ * @retval None
  */
-static void NumToStr2(u8 num, u8 *str)
+static void NumberToTwoDigits(u8 number, u8 *text)
 {
-    str[0] = num / 10 + '0';
-    str[1] = num % 10 + '0';
-    str[2] = '\0';
+    text[0] = (u8)('0' + (number / 10U));
+    text[1] = (u8)('0' + (number % 10U));
+    text[2] = '\0';
 }
 
 void main(void)
 {
-    u8 key;
-    u8 str[3];
+    u8 keyValue;
+    u8 keyText[KEY_TEXT_LENGTH];
 
-    lcd1602_init();
-    lcd1602_show_string(0, 0, "Matrix Key:");
+    LCD1602_Init();
+    LCD1602_ShowString(LCD1602_COLUMN_START, LCD1602_ROW_1, "Matrix Key:");
 
     while (1)
     {
-        key = MatrixKey();
+        keyValue = MatrixKey();
 
-        if (key != 0)
+        if (keyValue != MATRIX_KEY_NONE)
         {
-            NumToStr2(key, str);
-            lcd1602_show_string(0, 1, str);   /* Show on second line */
+            NumberToTwoDigits(keyValue, keyText);
+            LCD1602_ShowString(LCD1602_COLUMN_START, LCD1602_ROW_2, keyText);
         }
     }
 }

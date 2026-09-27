@@ -1,51 +1,62 @@
-/* matrix_key.c */
-#include <REGX52.H>
-#include "Delayms.h"
+/*
+ * File:   matrix_key.c
+ * Brief:  4x4 matrix keypad driver for the PuZhong 8051 board.
+ * Author: CaelusAn
+ * Date:   2026-09-27
+ */
+
+#include "matrix_key.h"
+
+#define MATRIX_KEY_ROW_COUNT        4U
+#define MATRIX_KEY_COLUMN_COUNT     4U
+#define MATRIX_KEY_ALL_PINS_HIGH    0xFFU
+#define MATRIX_KEY_COLUMN_LOW_BIT   0x01U
+#define MATRIX_KEY_ROW_READ_HIGH_BIT 0x80U
+#define MATRIX_KEY_DEBOUNCE_MS      20U
 
 /*
- * Matrix keypad scanning for PuZhong 8051 board.
- * Rows:    P1.0 ~ P1.3  (output low to scan)
- * Columns: P1.4 ~ P1.7  (input, low when pressed)
- *
- * Key map:
- *   P1.3:  1  5  9 13
- *   P1.2:  2  6 10 14
- *   P1.1:  3  7 11 15
- *   P1.0:  4  8 12 16
+ * @brief  Scan the matrix keypad and return the pressed key number.
+ * @param  None
+ * @retval Key number from 1 to 16, or MATRIX_KEY_NONE when no key is pressed.
  */
-unsigned char MatrixKey(void)
+u8 MatrixKey(void)
 {
-    unsigned char row, col;
-    unsigned char key_map[4][4] = {
-        { 4,  8, 12, 16},   /* P1.0 */
-        { 3,  7, 11, 15},   /* P1.1 */
-        { 2,  6, 10, 14},   /* P1.2 */
-        { 1,  5,  9, 13}    /* P1.3 */
-    };
-
-    for (row = 0; row < 4; row++)
+    static const u8 keyMap[MATRIX_KEY_COLUMN_COUNT][MATRIX_KEY_ROW_COUNT] =
     {
-        P1 = 0xFF;                  /* All rows high */
-        P1 &= ~(0x01 << row);       /* Pull only current row low */
+        { 4U,  8U, 12U, 16U },
+        { 3U,  7U, 11U, 15U },
+        { 2U,  6U, 10U, 14U },
+        { 1U,  5U,  9U, 13U }
+    };
+    u8 columnIndex;
+    u8 rowIndex;
+    u8 rowMask;
 
-        for (col = 0; col < 4; col++)
+    for (columnIndex = 0U; columnIndex < MATRIX_KEY_COLUMN_COUNT; columnIndex++)
+    {
+        P1 = MATRIX_KEY_ALL_PINS_HIGH;
+        P1 &= ~(MATRIX_KEY_COLUMN_LOW_BIT << columnIndex);
+
+        for (rowIndex = 0U; rowIndex < MATRIX_KEY_ROW_COUNT; rowIndex++)
         {
-            /* Check if current column is low */
-            if (!(P1 & (0x80 >> col)))
+            rowMask = (u8)(MATRIX_KEY_ROW_READ_HIGH_BIT >> rowIndex);
+
+            if ((P1 & rowMask) == 0U)
             {
-                Delayms(20);        /* Debounce press */
+                DelayMs(MATRIX_KEY_DEBOUNCE_MS);
 
-                if (!(P1 & (0x80 >> col)))
+                if ((P1 & rowMask) == 0U)
                 {
-                    /* Wait until key is released */
-                    while (!(P1 & (0x80 >> col)));
+                    while ((P1 & rowMask) == 0U)
+                    {
+                    }
 
-                    Delayms(20);    /* Debounce release */
-                    return key_map[row][col];
+                    DelayMs(MATRIX_KEY_DEBOUNCE_MS);
+                    return keyMap[columnIndex][rowIndex];
                 }
             }
         }
     }
 
-    return 0;   /* No key pressed */
+    return MATRIX_KEY_NONE;
 }

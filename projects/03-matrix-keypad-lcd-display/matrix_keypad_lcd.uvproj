@@ -382,16 +382,6 @@
               <FilePath>.\main.c</FilePath>
             </File>
             <File>
-              <FileName>Delayms.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Delayms.c</FilePath>
-            </File>
-            <File>
-              <FileName>Delayms.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Delayms.h</FilePath>
-            </File>
-            <File>
               <FileName>lcd1602.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\lcd1602.c</FilePath>

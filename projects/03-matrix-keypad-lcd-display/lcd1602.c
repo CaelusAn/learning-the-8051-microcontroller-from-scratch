@@ -1,157 +1,173 @@
+/*
+ * File:   lcd1602.c
+ * Brief:  LCD1602 command, data, and string display driver.
+ * Author: CaelusAn
+ * Date:   2026-09-27
+ */
+
 #include "lcd1602.h"
 
-/*
- * Function: lcd1602_write_cmd
- * Description: Write a command byte to the LCD1602.
- * Parameter: cmd - LCD command byte.
- */
-#if (LCD1602_4OR8_DATA_INTERFACE==0) // 8-bit LCD interface
-void lcd1602_write_cmd(u8 cmd)
-{
-	LCD1602_RS=0; // Select the command register
-	LCD1602_RW=0; // Select write mode
-	LCD1602_E=0;
-	LCD1602_DATAPORT=cmd; // Place the command on the data bus
-	delay_ms(1);
-	LCD1602_E=1; // Generate the enable pulse
-	delay_ms(1);
-	LCD1602_E=0; // Finish the write cycle
-}
-#else // 4-bit LCD interface
-void lcd1602_write_cmd(u8 cmd)
-{
-	LCD1602_RS=0; // Select the command register
-	LCD1602_RW=0; // Select write mode
-	LCD1602_E=0;
-	LCD1602_DATAPORT=cmd; // Send the high nibble
-	delay_ms(1);
-	LCD1602_E=1; // Generate the enable pulse
-	delay_ms(1);
-	LCD1602_E=0; // Finish the high-nibble transfer
+#define LCD1602_COMMAND_CLEAR_DISPLAY 0x01U
+#define LCD1602_COMMAND_ENTRY_MODE    0x06U
+#define LCD1602_COMMAND_DISPLAY_ON    0x0CU
+#define LCD1602_COMMAND_SET_DDRAM     0x80U
+#define LCD1602_SECOND_ROW_OFFSET     0x40U
+#define LCD1602_ENABLE_DELAY_MS       1U
 
-	LCD1602_DATAPORT=cmd<<4; // Send the low nibble
-	delay_ms(1);
-	LCD1602_E=1; // Generate the enable pulse
-	delay_ms(1);
-	LCD1602_E=0; // Finish the low-nibble transfer
-}
+#if (LCD1602_4OR8_DATA_INTERFACE == 0U)
+#define LCD1602_FUNCTION_SET 0x38U
+#else
+#define LCD1602_FUNCTION_SET 0x28U
 #endif
 
 /*
- * Function: lcd1602_write_data
- * Description: Write a data byte to the LCD1602.
- * Parameter: dat - Character data to display.
+ * @brief  Write a command byte to the LCD1602.
+ * @param  command LCD command byte.
+ * @retval None
  */
-#if (LCD1602_4OR8_DATA_INTERFACE==0) // 8-bit LCD interface
-void lcd1602_write_data(u8 dat)
+static void LCD1602_WriteCommand(u8 command)
 {
-	LCD1602_RS=1; // Select the data register
-	LCD1602_RW=0; // Select write mode
-	LCD1602_E=0;
-	LCD1602_DATAPORT=dat; // Place the data on the data bus
-	delay_ms(1);
-	LCD1602_E=1; // Generate the enable pulse
-	delay_ms(1);
-	LCD1602_E=0; // Finish the write cycle
-}
-#else // 4-bit LCD interface
-void lcd1602_write_data(u8 dat)
-{
-	LCD1602_RS=1; // Select the data register
-	LCD1602_RW=0; // Select write mode
-	LCD1602_E=0;
-	LCD1602_DATAPORT=dat; // Send the high nibble
-	delay_ms(1);
-	LCD1602_E=1; // Generate the enable pulse
-	delay_ms(1);
-	LCD1602_E=0; // Finish the high-nibble transfer
+    LCD1602_RS = 0;
+    LCD1602_RW = 0;
+    LCD1602_E = 0;
 
-	LCD1602_DATAPORT=dat<<4; // Send the low nibble
-	delay_ms(1);
-	LCD1602_E=1; // Generate the enable pulse
-	delay_ms(1);
-	LCD1602_E=0; // Finish the low-nibble transfer
-}
+#if (LCD1602_4OR8_DATA_INTERFACE == 0U)
+    LCD1602_DATA_PORT = command;
+    DelayMs(LCD1602_ENABLE_DELAY_MS);
+    LCD1602_E = 1;
+    DelayMs(LCD1602_ENABLE_DELAY_MS);
+    LCD1602_E = 0;
+#else
+    LCD1602_DATA_PORT = command & 0xF0U;
+    DelayMs(LCD1602_ENABLE_DELAY_MS);
+    LCD1602_E = 1;
+    DelayMs(LCD1602_ENABLE_DELAY_MS);
+    LCD1602_E = 0;
+
+    LCD1602_DATA_PORT = (u8)(command << 4U);
+    DelayMs(LCD1602_ENABLE_DELAY_MS);
+    LCD1602_E = 1;
+    DelayMs(LCD1602_ENABLE_DELAY_MS);
+    LCD1602_E = 0;
 #endif
+}
 
 /*
- * Function: lcd1602_init
- * Description: Initialize the LCD1602 for two-line text display.
+ * @brief  Write a data byte to the LCD1602.
+ * @param  value Character value to display.
+ * @retval None
  */
-#if (LCD1602_4OR8_DATA_INTERFACE==0) // 8-bit LCD interface
-void lcd1602_init(void)
+static void LCD1602_WriteData(u8 value)
 {
-	lcd1602_write_cmd(0x38); // 8-bit interface, 2 lines, 5x7 font
-	lcd1602_write_cmd(0x0c); // Display on, cursor off, blink off
-	lcd1602_write_cmd(0x06); // Increment the cursor after each write
-	lcd1602_write_cmd(0x01); // Clear the display
-}
-#else // 4-bit LCD interface
-void lcd1602_init(void)
-{
-	lcd1602_write_cmd(0x28); // 4-bit interface, 2 lines, 5x7 font
-	lcd1602_write_cmd(0x0c); // Display on, cursor off, blink off
-	lcd1602_write_cmd(0x06); // Increment the cursor after each write
-	lcd1602_write_cmd(0x01); // Clear the display
-}
+    LCD1602_RS = 1;
+    LCD1602_RW = 0;
+    LCD1602_E = 0;
+
+#if (LCD1602_4OR8_DATA_INTERFACE == 0U)
+    LCD1602_DATA_PORT = value;
+    DelayMs(LCD1602_ENABLE_DELAY_MS);
+    LCD1602_E = 1;
+    DelayMs(LCD1602_ENABLE_DELAY_MS);
+    LCD1602_E = 0;
+#else
+    LCD1602_DATA_PORT = value & 0xF0U;
+    DelayMs(LCD1602_ENABLE_DELAY_MS);
+    LCD1602_E = 1;
+    DelayMs(LCD1602_ENABLE_DELAY_MS);
+    LCD1602_E = 0;
+
+    LCD1602_DATA_PORT = (u8)(value << 4U);
+    DelayMs(LCD1602_ENABLE_DELAY_MS);
+    LCD1602_E = 1;
+    DelayMs(LCD1602_ENABLE_DELAY_MS);
+    LCD1602_E = 0;
 #endif
-
-/*
- * Function: lcd1602_clear
- * Description: Clear the LCD1602 display.
- */
-void lcd1602_clear(void)
-{
-	lcd1602_write_cmd(0x01);
 }
 
 /*
- * Function: lcd1602_show_string
- * Description: Write a null-terminated string starting at the specified
- *              row and column. Text wraps between the two LCD rows.
- * Parameters:
- *   x   - Starting column from 0 to 15.
- *   y   - Starting row: 0 for the first row, 1 for the second row.
- *   str - Pointer to the null-terminated string.
+ * @brief  Initialize the LCD1602 for two-line text display.
+ * @param  None
+ * @retval None
  */
-void lcd1602_show_string(u8 x,u8 y,u8 *str)
+void LCD1602_Init(void)
 {
-	u8 i=0;
+    LCD1602_WriteCommand(LCD1602_FUNCTION_SET);
+    LCD1602_WriteCommand(LCD1602_COMMAND_DISPLAY_ON);
+    LCD1602_WriteCommand(LCD1602_COMMAND_ENTRY_MODE);
+    LCD1602_WriteCommand(LCD1602_COMMAND_CLEAR_DISPLAY);
+}
 
-	if(y>1||x>15)return; // Ignore coordinates outside the display
+/*
+ * @brief  Clear the LCD1602 display.
+ * @param  None
+ * @retval None
+ */
+void LCD1602_Clear(void)
+{
+    LCD1602_WriteCommand(LCD1602_COMMAND_CLEAR_DISPLAY);
+}
 
-	if(y<1) // Write starting from the first row
-	{
-		while(*str!='\0') // Stop at the end of the string
-		{
-			if(i<16-x) // Continue on the first row
-			{
-				lcd1602_write_cmd(0x80+i+x); // Set the first-row address
-			}
-			else
-			{
-				lcd1602_write_cmd(0x40+0x80+i+x-16); // Wrap to the second row
-			}
-			lcd1602_write_data(*str); // Write the current character
-			str++; // Advance to the next character
-			i++;
-		}
-	}
-	else // Write starting from the second row
-	{
-		while(*str!='\0')
-		{
-			if(i<16-x) // Continue on the second row
-			{
-				lcd1602_write_cmd(0x80+0x40+i+x); // Set the second-row address
-			}
-			else
-			{
-				lcd1602_write_cmd(0x80+i+x-16); // Wrap to the first row
-			}
-			lcd1602_write_data(*str);
-			str++;
-			i++;
-		}
-	}
+/*
+ * @brief  Calculate the LCD DDRAM address for the next character.
+ * @param  column    Starting column from 0 to 15.
+ * @param  row       Starting row: 0 for the first row, 1 for the second row.
+ * @param  textIndex Zero-based character index in the string.
+ * @retval LCD command byte containing the target DDRAM address.
+ */
+static u8 LCD1602_GetAddress(u8 column, u8 row, u8 textIndex)
+{
+    if (row == LCD1602_ROW_1)
+    {
+        if (textIndex < (LCD1602_COLUMN_COUNT - column))
+        {
+            return (u8)(LCD1602_COMMAND_SET_DDRAM + column + textIndex);
+        }
+
+        return (u8)(LCD1602_COMMAND_SET_DDRAM +
+                    LCD1602_SECOND_ROW_OFFSET +
+                    column +
+                    textIndex -
+                    LCD1602_COLUMN_COUNT);
+    }
+
+    if (textIndex < (LCD1602_COLUMN_COUNT - column))
+    {
+        return (u8)(LCD1602_COMMAND_SET_DDRAM +
+                    LCD1602_SECOND_ROW_OFFSET +
+                    column +
+                    textIndex);
+    }
+
+    return (u8)(LCD1602_COMMAND_SET_DDRAM + column + textIndex -
+                LCD1602_COLUMN_COUNT);
+}
+
+/*
+ * @brief  Write a null-terminated string at the selected LCD position.
+ * @param  column Starting column from 0 to 15.
+ * @param  row    Starting row: 0 for the first row, 1 for the second row.
+ * @param  text   Pointer to the null-terminated string.
+ * @retval None
+ * @note   Text wraps automatically between the two LCD rows.
+ */
+void LCD1602_ShowString(u8 column, u8 row, const char *text)
+{
+    u8 textIndex = 0U;
+
+    if ((row >= LCD1602_ROW_COUNT) || (column >= LCD1602_COLUMN_COUNT))
+    {
+        return;
+    }
+
+    if (text == 0)
+    {
+        return;
+    }
+
+    while (text[textIndex] != '\0')
+    {
+        LCD1602_WriteCommand(LCD1602_GetAddress(column, row, textIndex));
+        LCD1602_WriteData((u8)text[textIndex]);
+        textIndex++;
+    }
 }

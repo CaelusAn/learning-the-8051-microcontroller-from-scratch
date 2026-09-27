@@ -1,15 +1,20 @@
-#ifndef _public_H
-#define _public_H
+/*
+ * File:   public.h
+ * Brief:  Common types and delay APIs for 8051 projects.
+ * Author: CaelusAn
+ * Date:   2026-09-27
+ */
+
+#ifndef __PUBLIC_H__
+#define __PUBLIC_H__
 
 #include <REGX52.H>
 
-// Common integer type aliases used by the project
-typedef unsigned int u16;
 typedef unsigned char u8;
+typedef unsigned int u16;
 typedef unsigned long u32;
 
-// Delay functions
-void delay_10us(u16 ten_us);
-void delay_ms(u16 ms);
+void Delay10us(u16 delayUnits);
+void DelayMs(u16 milliseconds);
 
 #endif
