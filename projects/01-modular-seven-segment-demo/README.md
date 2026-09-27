@@ -6,9 +6,10 @@ the STC89C52RC and compatible 8051 microcontrollers.
 ## Modules
 
 - `main.c`: Entry point with a periodic output toggle on `P2.0`.
-- `Delayms.c` / `Delayms.h`: Millisecond delay routine calibrated for 12 MHz.
-- `Nixie.c` / `Nixie.h`: Seven-segment display driver with a digit lookup table
-  and position selection through `P2.2`-`P2.4`.
+- `public.c` / `public.h`: Common types and delay routines calibrated for
+  12 MHz.
+- `seven_segment.c` / `seven_segment.h`: Seven-segment display driver with a
+  digit lookup table and position selection through `P2.2`-`P2.4`.
 
 ## Build
 

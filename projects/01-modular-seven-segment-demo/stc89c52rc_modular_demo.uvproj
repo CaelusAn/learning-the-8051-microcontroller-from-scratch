@@ -382,24 +382,24 @@
               <FilePath>.\main.c</FilePath>
             </File>
             <File>
-              <FileName>Delayms.h</FileName>
+              <FileName>public.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\Delayms.h</FilePath>
+              <FilePath>.\public.h</FilePath>
             </File>
             <File>
-              <FileName>Delayms.c</FileName>
+              <FileName>public.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Delayms.c</FilePath>
+              <FilePath>.\public.c</FilePath>
             </File>
             <File>
-              <FileName>Nixie.c</FileName>
+              <FileName>seven_segment.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Nixie.c</FilePath>
+              <FilePath>.\seven_segment.c</FilePath>
             </File>
             <File>
-              <FileName>Nixie.h</FileName>
+              <FileName>seven_segment.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\Nixie.h</FilePath>
+              <FilePath>.\seven_segment.h</FilePath>
             </File>
           </Files>
         </Group>

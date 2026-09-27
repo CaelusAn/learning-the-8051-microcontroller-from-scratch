@@ -1,14 +1,22 @@
-#include <REGX52.H>
-#include "Delayms.h"
-#include "Nixie.h"
+/*
+ * File:   main.c
+ * Brief:  Blink an LED on P2.0 as a basic timing demonstration.
+ * Author: CaelusAn
+ * Date:   2026-09-27
+ */
 
-void main()
+#include "public.h"
+
+#define BLINK_LED         P2_0
+#define BLINK_INTERVAL_MS 500U
+
+void main(void)
 {
-	while(1)
-	{
-		P2_0 = 1;
-		Delayms(500);
-		P2_0 = 0;
-		Delayms(500);
-	}
+    while (1)
+    {
+        BLINK_LED = 1;
+        DelayMs(BLINK_INTERVAL_MS);
+        BLINK_LED = 0;
+        DelayMs(BLINK_INTERVAL_MS);
+    }
 }
