@@ -37,6 +37,14 @@ from `01` to `16` on an LCD1602.
 
 Project directory: `projects/03-matrix-keypad-lcd-display/`
 
+### 04 - Matrix Keypad Password Lock
+
+Implements a six-digit password lock with masked LCD input, confirm and delete
+keys, a five-second unlock output, progressive timed lockouts, and a permanent
+disabled state after repeated failures.
+
+Project directory: `projects/04-matrix-keypad-password-lock/`
+
 ## Repository Layout
 
 ```text
@@ -63,16 +71,30 @@ Project directory: `projects/03-matrix-keypad-lcd-display/`
     |   |-- proj.uvproj
     |   |-- public.c
     |   `-- public.h
-    `-- 03-matrix-keypad-lcd-display
+    |-- 03-matrix-keypad-lcd-display
+    |   |-- README.md
+    |   |-- lcd1602.c
+    |   |-- lcd1602.h
+    |   |-- main.c
+    |   |-- matrix_key.c
+    |   |-- matrix_key.h
+    |   |-- matrix_keypad_lcd.uvproj
+    |   |-- public.c
+    |   `-- public.h
+    `-- 04-matrix-keypad-password-lock
         |-- README.md
         |-- lcd1602.c
         |-- lcd1602.h
         |-- main.c
         |-- matrix_key.c
         |-- matrix_key.h
-        |-- matrix_keypad_lcd.uvproj
+        |-- matrix_keypad_password_lock.uvproj
+        |-- password_lock.c
+        |-- password_lock.h
         |-- public.c
-        `-- public.h
+        |-- public.h
+        |-- timer.c
+        `-- timer.h
 ```
 
 ## Coding Style
