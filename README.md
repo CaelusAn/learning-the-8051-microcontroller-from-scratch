@@ -45,6 +45,14 @@ disabled state after repeated failures.
 
 Project directory: `projects/04-matrix-keypad-password-lock/`
 
+### 05 - Timer-Based LED Streaming
+
+Demonstrates Timer0-based LED pattern rotation with direction control from an
+independent key. The project includes independent-key scanning, debounce logic,
+and approximate software delays.
+
+Project directory: `projects/05-timer-based-ledstreaming/`
+
 ## Repository Layout
 
 ```text
@@ -81,20 +89,30 @@ Project directory: `projects/04-matrix-keypad-password-lock/`
     |   |-- matrix_keypad_lcd.uvproj
     |   |-- public.c
     |   `-- public.h
-    `-- 04-matrix-keypad-password-lock
+    |-- 04-matrix-keypad-password-lock
+    |   |-- README.md
+    |   |-- lcd1602.c
+    |   |-- lcd1602.h
+    |   |-- main.c
+    |   |-- matrix_key.c
+    |   |-- matrix_key.h
+    |   |-- matrix_keypad_password_lock.uvproj
+    |   |-- password_lock.c
+    |   |-- password_lock.h
+    |   |-- public.c
+    |   |-- public.h
+    |   |-- timer.c
+    |   `-- timer.h
+    `-- 05-timer-based-ledstreaming
         |-- README.md
-        |-- lcd1602.c
-        |-- lcd1602.h
+        |-- Delay.c
+        |-- Delay.h
+        |-- Key.c
+        |-- Key.h
         |-- main.c
-        |-- matrix_key.c
-        |-- matrix_key.h
-        |-- matrix_keypad_password_lock.uvproj
-        |-- password_lock.c
-        |-- password_lock.h
-        |-- public.c
-        |-- public.h
-        |-- timer.c
-        `-- timer.h
+        |-- project.uvproj
+        |-- Timer0.c
+        `-- Timer0.h
 ```
 
 ## Coding Style
